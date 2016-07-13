@@ -17,6 +17,6 @@ docker create --name upsource-data \
 docker run -d \
   --volumes-from upsource-data \
   -p 8080:8080 \
-  -e "HOSTNAME=<hostname>" \
+  -e "BASE_URL=<hostname>" \
   --name upsource wearemakery/upsource
 ```

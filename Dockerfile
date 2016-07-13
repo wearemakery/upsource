@@ -2,18 +2,21 @@ FROM opensuse
 
 MAINTAINER Gyula Voros <gyulavoros87@gmail.com>
 
-ENV UPSOURCE_VERSION 3.0.4237
-
-VOLUME ["/opt/Upsource/conf", "/opt/Upsource/data", "/opt/Upsource/logs", "/opt/Upsource/backups"]
+ENV UPSOURCE_VERSION 3.0.4389
 
 RUN zypper -n in hostname unzip wget \
+  && mkdir /opt/Upsource \
   && wget --no-check-certificate -q -P /opt/ https://download.jetbrains.com/upsource/upsource-$UPSOURCE_VERSION.zip \
-  && unzip -q -d /opt/ /opt/upsource-$UPSOURCE_VERSION.zip \
+  && unzip -q -d /opt /opt/upsource-$UPSOURCE_VERSION.zip \
   && rm -rf /opt/upsource-$UPSOURCE_VERSION.zip \
+  && mv /opt/upsource-$UPSOURCE_VERSION/* /opt/Upsource/ \
+  && rm -rf /opt/upsource-$UPSOURCE_VERSION \
   && cd /opt/Upsource/internal/java \
   && rm -rf mac-x64 windows-amd64 \
   && zypper -n rm unzip wget \
   && zypper clean
+
+VOLUME ["/opt/Upsource/conf", "/opt/Upsource/data", "/opt/Upsource/logs", "/opt/Upsource/backups"]
 
 RUN echo "* - memlock unlimited" >> /etc/security/limits.conf \
   && echo "* - nofile 100000" >> /etc/security/limits.conf \
