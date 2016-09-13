@@ -2,7 +2,7 @@ FROM opensuse
 
 MAINTAINER Gyula Voros <gyulavoros87@gmail.com>
 
-ENV UPSOURCE_VERSION 3.0.4389
+ENV UPSOURCE_VERSION 3.0.4396
 
 RUN zypper -n in hostname unzip wget \
   && mkdir /opt/Upsource \
