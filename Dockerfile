@@ -23,6 +23,6 @@ RUN echo "* - memlock unlimited" >> /etc/security/limits.conf \
   && echo "* - nproc 32768" >> /etc/security/limits.conf \
   && echo "* - as unlimited" >> /etc/security/limits.conf
 
-EXPOSE 8080
+EXPOSE 1111
 WORKDIR /opt/Upsource
-CMD ["sh", "-c", "bin/upsource.sh configure --listen-port 8080 --base-url $BASE_URL ; bin/upsource.sh run"]
+CMD ["sh", "-c", "bin/upsource.sh configure --listen-port 1111 --base-url $BASE_URL ; bin/upsource.sh run"]
