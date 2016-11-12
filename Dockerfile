@@ -1,28 +1,28 @@
-FROM opensuse
+FROM azul/zulu-openjdk-debian:8
 
 MAINTAINER Gyula Voros <gyulavoros87@gmail.com>
 
-ENV UPSOURCE_VERSION 3.5.3510
+ENV UPSOURCE_VERSION 3.5.3550
 
-RUN zypper -n in hostname unzip wget \
-  && mkdir /opt/Upsource \
-  && wget --no-check-certificate -q -P /opt/ https://download.jetbrains.com/upsource/upsource-$UPSOURCE_VERSION.zip \
-  && unzip -q -d /opt /opt/upsource-$UPSOURCE_VERSION.zip \
-  && rm -rf /opt/upsource-$UPSOURCE_VERSION.zip \
-  && mv /opt/upsource-$UPSOURCE_VERSION/* /opt/Upsource/ \
-  && rm -rf /opt/upsource-$UPSOURCE_VERSION \
-  && cd /opt/Upsource/internal/java \
-  && rm -rf mac-x64 windows-amd64 \
-  && zypper -n rm unzip wget \
-  && zypper clean
+WORKDIR /opt
 
+RUN apt-get update && apt-get install -y unzip wget ca-certificates && \
+    wget -q https://download.jetbrains.com/upsource/upsource-$UPSOURCE_VERSION.zip && \
+    unzip -q upsource-$UPSOURCE_VERSION.zip -x */internal/java/*  && \
+    rm -rf upsource-$UPSOURCE_VERSION.zip  && \
+    mv upsource-$UPSOURCE_VERSION Upsource  && \ 
+    apt-get autoremove -y unzip wget  && \
+    rm -rf /var/cache/apt/archives
+
+RUN echo "* - memlock unlimited" >> /etc/security/limits.conf && \
+    echo "* - nofile 100000"     >> /etc/security/limits.conf && \
+    echo "* - nproc 32768"       >> /etc/security/limits.conf && \
+    echo "* - as unlimited"      >> /etc/security/limits.conf
+
+WORKDIR /opt/Upsource
+
+EXPOSE 8080
 VOLUME ["/opt/Upsource/conf", "/opt/Upsource/data", "/opt/Upsource/logs", "/opt/Upsource/backups"]
 
-RUN echo "* - memlock unlimited" >> /etc/security/limits.conf \
-  && echo "* - nofile 100000" >> /etc/security/limits.conf \
-  && echo "* - nproc 32768" >> /etc/security/limits.conf \
-  && echo "* - as unlimited" >> /etc/security/limits.conf
-
-EXPOSE 1111
-WORKDIR /opt/Upsource
-CMD ["sh", "-c", "bin/upsource.sh configure --listen-port 1111 --base-url $BASE_URL ; bin/upsource.sh run"]
+ENTRYPOINT ["bin/upsource.sh"]
+CMD ["run"]
