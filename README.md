@@ -1,6 +1,6 @@
 # Upsource Docker
 
-This image contains Jetbrains [Upsource](https://www.jetbrains.com/upsource/). It's based on [openSUSE](https://hub.docker.com/_/opensuse/).
+This image contains Jetbrains [Upsource](https://www.jetbrains.com/upsource/). It's based on [Zulu](https://hub.docker.com/r/azul/zulu-openjdk-debian/).
 
 # Usage
 
@@ -17,6 +17,5 @@ docker create --name upsource-data \
 docker run -d \
   --volumes-from upsource-data \
   -p 8080:8080 \
-  -e "BASE_URL=<hostname>" \
   --name upsource wearemakery/upsource
 ```

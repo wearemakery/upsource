@@ -8,10 +8,10 @@ WORKDIR /opt
 
 RUN apt-get update && apt-get install -y unzip wget ca-certificates && \
     wget -q https://download.jetbrains.com/upsource/upsource-$UPSOURCE_VERSION.zip && \
-    unzip -q upsource-$UPSOURCE_VERSION.zip -x */internal/java/*  && \
-    rm -rf upsource-$UPSOURCE_VERSION.zip  && \
-    mv upsource-$UPSOURCE_VERSION Upsource  && \ 
-    apt-get autoremove -y unzip wget  && \
+    unzip -q upsource-$UPSOURCE_VERSION.zip -x */internal/java/* && \
+    rm -rf upsource-$UPSOURCE_VERSION.zip && \
+    mv upsource-$UPSOURCE_VERSION Upsource && \ 
+    apt-get autoremove -y unzip wget && \
     rm -rf /var/cache/apt/archives
 
 RUN echo "* - memlock unlimited" >> /etc/security/limits.conf && \
